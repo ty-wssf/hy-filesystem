@@ -1,0 +1,2 @@
+adaptiveFileService=com.hy.filesystem.storage.service.impl.AdaptiveFileService
+localFileServiceImpl=com.hy.filesystem.storage.service.impl.LocalFileServiceImpl

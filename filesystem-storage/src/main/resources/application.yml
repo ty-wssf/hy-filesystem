@@ -1,0 +1,11 @@
+server:
+  port: 8086
+file:
+  # 上传文件存储在本地的根路径
+  path: G:\IDEA\server\trafficorder
+  # 资源映射路径 前缀
+  prefix:
+  # 域名或本机访问地址
+  domain: http://10.20.11.216:8086
+  # 是否为文件重新命名
+  rename: true
