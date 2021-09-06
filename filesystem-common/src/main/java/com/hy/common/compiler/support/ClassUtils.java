@@ -11,9 +11,6 @@ import java.util.Map;
 
 /**
  * ClassUtils. (Tool, Static, ThreadSafe)
- *
- * @author wyl
- * @since 2021-09-02 16:47:11
  */
 public class ClassUtils {
 

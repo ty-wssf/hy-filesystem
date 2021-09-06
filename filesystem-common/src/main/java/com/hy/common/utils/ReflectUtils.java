@@ -17,9 +17,6 @@ import java.util.regex.Pattern;
 
 /**
  * ReflectUtils
- *
- * @author wyl
- * @since 2021-09-02 17:15:02
  */
 public final class ReflectUtils {
 
@@ -114,22 +111,23 @@ public final class ReflectUtils {
     }
 
     public static Class<?> getBoxedClass(Class<?> c) {
-        if (c == int.class)
+        if (c == int.class) {
             c = Integer.class;
-        else if (c == boolean.class)
+        } else if (c == boolean.class) {
             c = Boolean.class;
-        else if (c == long.class)
+        } else if (c == long.class) {
             c = Long.class;
-        else if (c == float.class)
+        } else if (c == float.class) {
             c = Float.class;
-        else if (c == double.class)
+        } else if (c == double.class) {
             c = Double.class;
-        else if (c == char.class)
+        } else if (c == char.class) {
             c = Character.class;
-        else if (c == byte.class)
+        } else if (c == byte.class) {
             c = Byte.class;
-        else if (c == short.class)
+        } else if (c == short.class) {
             c = Short.class;
+        }
         return c;
     }
 
@@ -142,29 +140,32 @@ public final class ReflectUtils {
      */
     public static boolean isCompatible(Class<?> c, Object o) {
         boolean pt = c.isPrimitive();
-        if (o == null)
+        if (o == null) {
             return !pt;
+        }
 
         if (pt) {
-            if (c == int.class)
+            if (c == int.class) {
                 c = Integer.class;
-            else if (c == boolean.class)
+            } else if (c == boolean.class) {
                 c = Boolean.class;
-            else if (c == long.class)
+            } else if (c == long.class) {
                 c = Long.class;
-            else if (c == float.class)
+            } else if (c == float.class) {
                 c = Float.class;
-            else if (c == double.class)
+            } else if (c == double.class) {
                 c = Double.class;
-            else if (c == char.class)
+            } else if (c == char.class) {
                 c = Character.class;
-            else if (c == byte.class)
+            } else if (c == byte.class) {
                 c = Byte.class;
-            else if (c == short.class)
+            } else if (c == short.class) {
                 c = Short.class;
+            }
         }
-        if (c == o.getClass())
+        if (c == o.getClass()) {
             return true;
+        }
         return c.isInstance(o);
     }
 
@@ -177,25 +178,36 @@ public final class ReflectUtils {
      */
     public static boolean isCompatible(Class<?>[] cs, Object[] os) {
         int len = cs.length;
-        if (len != os.length) return false;
-        if (len == 0) return true;
-        for (int i = 0; i < len; i++)
-            if (!isCompatible(cs[i], os[i])) return false;
+        if (len != os.length) {
+            return false;
+        }
+        if (len == 0) {
+            return true;
+        }
+        for (int i = 0; i < len; i++) {
+            if (!isCompatible(cs[i], os[i])) {
+                return false;
+            }
+        }
         return true;
     }
 
     public static String getCodeBase(Class<?> cls) {
-        if (cls == null)
+        if (cls == null) {
             return null;
+        }
         ProtectionDomain domain = cls.getProtectionDomain();
-        if (domain == null)
+        if (domain == null) {
             return null;
+        }
         CodeSource source = domain.getCodeSource();
-        if (source == null)
+        if (source == null) {
             return null;
+        }
         URL location = source.getLocation();
-        if (location == null)
+        if (location == null) {
             return null;
+        }
         return location.getFile();
     }
 
@@ -257,8 +269,9 @@ public final class ReflectUtils {
         ret.append(m.getName()).append('(');
         Class<?>[] parameterTypes = m.getParameterTypes();
         for (int i = 0; i < parameterTypes.length; i++) {
-            if (i > 0)
+            if (i > 0) {
                 ret.append(',');
+            }
             ret.append(getName(parameterTypes[i]));
         }
         ret.append(')');
@@ -294,8 +307,9 @@ public final class ReflectUtils {
         StringBuilder ret = new StringBuilder("(");
         Class<?>[] parameterTypes = c.getParameterTypes();
         for (int i = 0; i < parameterTypes.length; i++) {
-            if (i > 0)
+            if (i > 0) {
                 ret.append(',');
+            }
             ret.append(getName(parameterTypes[i]));
         }
         ret.append(')');
@@ -321,15 +335,25 @@ public final class ReflectUtils {
 
         if (c.isPrimitive()) {
             String t = c.getName();
-            if ("void".equals(t)) ret.append(JVM_VOID);
-            else if ("boolean".equals(t)) ret.append(JVM_BOOLEAN);
-            else if ("byte".equals(t)) ret.append(JVM_BYTE);
-            else if ("char".equals(t)) ret.append(JVM_CHAR);
-            else if ("double".equals(t)) ret.append(JVM_DOUBLE);
-            else if ("float".equals(t)) ret.append(JVM_FLOAT);
-            else if ("int".equals(t)) ret.append(JVM_INT);
-            else if ("long".equals(t)) ret.append(JVM_LONG);
-            else if ("short".equals(t)) ret.append(JVM_SHORT);
+            if ("void".equals(t)) {
+                ret.append(JVM_VOID);
+            } else if ("boolean".equals(t)) {
+                ret.append(JVM_BOOLEAN);
+            } else if ("byte".equals(t)) {
+                ret.append(JVM_BYTE);
+            } else if ("char".equals(t)) {
+                ret.append(JVM_CHAR);
+            } else if ("double".equals(t)) {
+                ret.append(JVM_DOUBLE);
+            } else if ("float".equals(t)) {
+                ret.append(JVM_FLOAT);
+            } else if ("int".equals(t)) {
+                ret.append(JVM_INT);
+            } else if ("long".equals(t)) {
+                ret.append(JVM_LONG);
+            } else if ("short".equals(t)) {
+                ret.append(JVM_SHORT);
+            }
         } else {
             ret.append('L');
             ret.append(c.getName().replace('.', '/'));
@@ -351,8 +375,9 @@ public final class ReflectUtils {
             return "";
 
         StringBuilder sb = new StringBuilder(64);
-        for (Class<?> c : cs)
+        for (Class<?> c : cs) {
             sb.append(getDesc(c));
+        }
         return sb.toString();
     }
 
@@ -422,15 +447,25 @@ public final class ReflectUtils {
             ret.append(getDesc(c.getComponentType()));
         } else if (c.isPrimitive()) {
             String t = c.getName();
-            if ("void".equals(t)) ret.append(JVM_VOID);
-            else if ("boolean".equals(t)) ret.append(JVM_BOOLEAN);
-            else if ("byte".equals(t)) ret.append(JVM_BYTE);
-            else if ("char".equals(t)) ret.append(JVM_CHAR);
-            else if ("double".equals(t)) ret.append(JVM_DOUBLE);
-            else if ("float".equals(t)) ret.append(JVM_FLOAT);
-            else if ("int".equals(t)) ret.append(JVM_INT);
-            else if ("long".equals(t)) ret.append(JVM_LONG);
-            else if ("short".equals(t)) ret.append(JVM_SHORT);
+            if ("void".equals(t)) {
+                ret.append(JVM_VOID);
+            } else if ("boolean".equals(t)) {
+                ret.append(JVM_BOOLEAN);
+            } else if ("byte".equals(t)) {
+                ret.append(JVM_BYTE);
+            } else if ("char".equals(t)) {
+                ret.append(JVM_CHAR);
+            } else if ("double".equals(t)) {
+                ret.append(JVM_DOUBLE);
+            } else if ("float".equals(t)) {
+                ret.append(JVM_FLOAT);
+            } else if ("int".equals(t)) {
+                ret.append(JVM_INT);
+            } else if ("long".equals(t)) {
+                ret.append(JVM_LONG);
+            } else if ("short".equals(t)) {
+                ret.append(JVM_SHORT);
+            }
         } else {
             ret.append('L');
             ret.append(c.getName().replace('.', '/'));
@@ -502,17 +537,30 @@ public final class ReflectUtils {
             c = (name.length() - index) / 2;
             name = name.substring(0, index);
         }
-        while (c-- > 0) sb.append("[");
-        if ("void".equals(name)) sb.append(JVM_VOID);
-        else if ("boolean".equals(name)) sb.append(JVM_BOOLEAN);
-        else if ("byte".equals(name)) sb.append(JVM_BYTE);
-        else if ("char".equals(name)) sb.append(JVM_CHAR);
-        else if ("double".equals(name)) sb.append(JVM_DOUBLE);
-        else if ("float".equals(name)) sb.append(JVM_FLOAT);
-        else if ("int".equals(name)) sb.append(JVM_INT);
-        else if ("long".equals(name)) sb.append(JVM_LONG);
-        else if ("short".equals(name)) sb.append(JVM_SHORT);
-        else sb.append('L').append(name.replace('.', '/')).append(';');
+        while (c-- > 0) {
+            sb.append("[");
+        }
+        if ("void".equals(name)) {
+            sb.append(JVM_VOID);
+        } else if ("boolean".equals(name)) {
+            sb.append(JVM_BOOLEAN);
+        } else if ("byte".equals(name)) {
+            sb.append(JVM_BYTE);
+        } else if ("char".equals(name)) {
+            sb.append(JVM_CHAR);
+        } else if ("double".equals(name)) {
+            sb.append(JVM_DOUBLE);
+        } else if ("float".equals(name)) {
+            sb.append(JVM_FLOAT);
+        } else if ("int".equals(name)) {
+            sb.append(JVM_INT);
+        } else if ("long".equals(name)) {
+            sb.append(JVM_LONG);
+        } else if ("short".equals(name)) {
+            sb.append(JVM_SHORT);
+        } else {
+            sb.append('L').append(name.replace('.', '/')).append(';');
+        }
         return sb.toString();
     }
 
@@ -570,7 +618,9 @@ public final class ReflectUtils {
         } else {
             sb.append(desc.substring(c + 1, desc.length() - 1).replace('/', '.'));
         }
-        while (c-- > 0) sb.append("[]");
+        while (c-- > 0) {
+            sb.append("[]");
+        }
         return sb.toString();
     }
 
@@ -611,34 +661,56 @@ public final class ReflectUtils {
         }
         if (c > 0) {
             StringBuilder sb = new StringBuilder();
-            while (c-- > 0)
+            while (c-- > 0) {
                 sb.append("[");
+            }
 
-            if ("void".equals(name)) sb.append(JVM_VOID);
-            else if ("boolean".equals(name)) sb.append(JVM_BOOLEAN);
-            else if ("byte".equals(name)) sb.append(JVM_BYTE);
-            else if ("char".equals(name)) sb.append(JVM_CHAR);
-            else if ("double".equals(name)) sb.append(JVM_DOUBLE);
-            else if ("float".equals(name)) sb.append(JVM_FLOAT);
-            else if ("int".equals(name)) sb.append(JVM_INT);
-            else if ("long".equals(name)) sb.append(JVM_LONG);
-            else if ("short".equals(name)) sb.append(JVM_SHORT);
-            else sb.append('L').append(name).append(';'); // "java.lang.Object" ==> "Ljava.lang.Object;"
+            if ("void".equals(name)) {
+            } else if ("boolean".equals(name)) {
+                sb.append(JVM_BOOLEAN);
+            } else if ("byte".equals(name)) {
+                sb.append(JVM_BYTE);
+            } else if ("char".equals(name)) {
+                sb.append(JVM_CHAR);
+            } else if ("double".equals(name)) {
+                sb.append(JVM_DOUBLE);
+            } else if ("float".equals(name)) {
+                sb.append(JVM_FLOAT);
+            } else if ("int".equals(name)) {
+                sb.append(JVM_INT);
+            } else if ("long".equals(name)) {
+                sb.append(JVM_LONG);
+            } else if ("short".equals(name)) {
+                sb.append(JVM_SHORT);
+            } else {
+                sb.append('L').append(name).append(';');
+            } // "java.lang.Object" ==> "Ljava.lang.Object;"
             name = sb.toString();
         } else {
-            if ("void".equals(name)) return void.class;
-            else if ("boolean".equals(name)) return boolean.class;
-            else if ("byte".equals(name)) return byte.class;
-            else if ("char".equals(name)) return char.class;
-            else if ("double".equals(name)) return double.class;
-            else if ("float".equals(name)) return float.class;
-            else if ("int".equals(name)) return int.class;
-            else if ("long".equals(name)) return long.class;
-            else if ("short".equals(name)) return short.class;
+            if ("void".equals(name)) {
+                return void.class;
+            } else if ("boolean".equals(name)) {
+                return boolean.class;
+            } else if ("byte".equals(name)) {
+                return byte.class;
+            } else if ("char".equals(name)) {
+                return char.class;
+            } else if ("double".equals(name)) {
+                return double.class;
+            } else if ("float".equals(name)) {
+                return float.class;
+            } else if ("int".equals(name)) {
+                return int.class;
+            } else if ("long".equals(name)) {
+                return long.class;
+            } else if ("short".equals(name)) {
+                return short.class;
+            }
         }
 
-        if (cl == null)
+        if (cl == null) {
             cl = ClassHelper.getClassLoader();
+        }
         Class<?> clazz = NAME_CLASS_CACHE.get(name);
         if (clazz == null) {
             clazz = Class.forName(name, true, cl);
@@ -700,8 +772,9 @@ public final class ReflectUtils {
                 throw new ClassNotFoundException("Class not found: " + desc);
         }
 
-        if (cl == null)
+        if (cl == null) {
             cl = ClassHelper.getClassLoader();
+        }
         Class<?> clazz = DESC_CLASS_CACHE.get(desc);
         if (clazz == null) {
             clazz = Class.forName(desc, true, cl);
@@ -731,13 +804,15 @@ public final class ReflectUtils {
      * @throws ClassNotFoundException
      */
     private static Class<?>[] desc2classArray(ClassLoader cl, String desc) throws ClassNotFoundException {
-        if (desc.length() == 0)
+        if (desc.length() == 0) {
             return EMPTY_CLASS_ARRAY;
+        }
 
         List<Class<?>> cs = new ArrayList<Class<?>>();
         Matcher m = DESC_PATTERN.matcher(desc);
-        while (m.find())
+        while (m.find()) {
             cs.add(desc2class(cl, m.group()));
+        }
         return cs.toArray(EMPTY_CLASS_ARRAY);
     }
 
@@ -845,8 +920,9 @@ public final class ReflectUtils {
     }
 
     private static Object getEmptyObject(Class<?> returnType, Map<Class<?>, Object> emptyInstances, int level) {
-        if (level > 2)
+        if (level > 2) {
             return null;
+        }
         if (returnType == null) {
             return null;
         } else if (returnType == boolean.class || returnType == Boolean.class) {
@@ -886,6 +962,9 @@ public final class ReflectUtils {
                 while (cls != null && cls != Object.class) {
                     Field[] fields = cls.getDeclaredFields();
                     for (Field field : fields) {
+                        if (field.isSynthetic()) {
+                            continue;
+                        }
                         Object property = getEmptyObject(field.getType(), emptyInstances, level + 1);
                         if (property != null) {
                             try {

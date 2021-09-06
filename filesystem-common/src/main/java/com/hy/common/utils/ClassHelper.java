@@ -1,12 +1,13 @@
 package com.hy.common.utils;
 
 import java.lang.reflect.Array;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 
-/**
- * @author wyl
- * @since 2021-09-02 16:55:03
- */
 public class ClassHelper {
 
     /**
@@ -95,7 +96,7 @@ public class ClassHelper {
      * reference as well).
      *
      * @return the default ClassLoader (never <code>null</code>)
-     * @see Thread#getContextClassLoader()
+     * @see java.lang.Thread#getContextClassLoader()
      */
     public static ClassLoader getClassLoader() {
         return getClassLoader(ClassHelper.class);

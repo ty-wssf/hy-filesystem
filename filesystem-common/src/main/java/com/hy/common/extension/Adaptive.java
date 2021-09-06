@@ -5,8 +5,8 @@ import java.lang.annotation.*;
 /**
  * Provide helpful information for {@link ExtensionLoader} to inject dependency extension instance.
  *
- * @author wyl
- * @since 2021-09-02 17:06:16
+ * @see ExtensionLoader
+ * @see URL
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
@@ -28,7 +28,7 @@ public @interface Adaptive {
      * </ol>
      * If default extension's name is not give on interface's {@link SPI}, then a name is generated from interface's
      * class name with the rule: divide classname from capital char into several parts, and separate the parts with
-     * dot '.', for example: for {@code com.hy.xxx.YyyInvokerWrapper}, its default name is
+     * dot '.', for example: for {@code com.alibaba.dubbo.xxx.YyyInvokerWrapper}, its default name is
      * <code>String[] {"yyy.invoker.wrapper"}</code>. This name will be used to search for parameter from URL.
      *
      * @return parameter key names in URL
@@ -36,4 +36,3 @@ public @interface Adaptive {
     String[] value() default {};
 
 }
-

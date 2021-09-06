@@ -6,9 +6,6 @@ import com.hy.common.extension.ExtensionLoader;
 
 /**
  * AdaptiveCompiler. (SPI, Singleton, ThreadSafe)
- *
- * @author wyl
- * @since 2021-09-02 17:05:05
  */
 @Adaptive
 public class AdaptiveCompiler implements Compiler {
@@ -19,6 +16,7 @@ public class AdaptiveCompiler implements Compiler {
         DEFAULT_COMPILER = compiler;
     }
 
+    @Override
     public Class<?> compile(String code, ClassLoader classLoader) {
         Compiler compiler;
         ExtensionLoader<Compiler> loader = ExtensionLoader.getExtensionLoader(Compiler.class);

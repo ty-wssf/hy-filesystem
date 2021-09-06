@@ -2,9 +2,6 @@ package com.hy.common.extension;
 
 /**
  * ExtensionFactory
- *
- * @author wyl
- * @since 2021-09-02 17:11:35
  */
 @SPI
 public interface ExtensionFactory {

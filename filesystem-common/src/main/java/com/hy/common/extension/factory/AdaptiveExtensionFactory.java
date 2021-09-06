@@ -10,9 +10,6 @@ import java.util.List;
 
 /**
  * AdaptiveExtensionFactory
- *
- * @author wyl
- * @since 2021-09-02 18:03:23
  */
 @Adaptive
 public class AdaptiveExtensionFactory implements ExtensionFactory {

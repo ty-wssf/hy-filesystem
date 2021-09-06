@@ -12,16 +12,53 @@ import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.regex.Pattern;
 
 /**
  * URL - Uniform Resource Locator (Immutable, ThreadSafe)
+ * <p>
+ * url example:
+ * <ul>
+ * <li>http://www.facebook.com/friends?param1=value1&amp;param2=value2
+ * <li>http://username:password@10.20.130.230:8080/list?version=1.0.0
+ * <li>ftp://username:password@192.168.1.7:21/1/read.txt
+ * <li>registry://192.168.1.7:9090/com.alibaba.service1?param1=value1&amp;param2=value2
+ * </ul>
+ * <p>
+ * Some strange example below:
+ * <ul>
+ * <li>192.168.1.3:20880<br>
+ * for this case, url protocol = null, url host = 192.168.1.3, port = 20880, url path = null
+ * <li>file:///home/user1/router.js?type=script<br>
+ * for this case, url protocol = file, url host = null, url path = home/user1/router.js
+ * <li>file://home/user1/router.js?type=script<br>
+ * for this case, url protocol = file, url host = home, url path = user1/router.js
+ * <li>file:///D:/1/router.js?type=script<br>
+ * for this case, url protocol = file, url host = null, url path = D:/1/router.js
+ * <li>file:/D:/1/router.js?type=script<br>
+ * same as above file:///D:/1/router.js?type=script
+ * <li>/home/user1/router.js?type=script <br>
+ * for this case, url protocol = null, url host = null, url path = home/user1/router.js
+ * <li>home/user1/router.js?type=script <br>
+ * for this case, url protocol = null, url host = home, url path = user1/router.js
+ * </ul>
  *
- * @author wyl
- * @since 2021-09-02 17:27:09
+ * @see java.net.URL
+ * @see java.net.URI
  */
 public final class URL implements Serializable {
 
     private static final long serialVersionUID = -1985165475234910535L;
+    public static final String GROUP_KEY = "group";
+    public static final String VERSION_KEY = "version";
+    public static final String DEFAULT_KEY_PREFIX = "default.";
+    public static final Pattern COMMA_SPLIT_PATTERN = Pattern
+            .compile("\\s*[,]+\\s*");
+    public static final String ANYHOST_VALUE = "0.0.0.0";
+    public static final String ANYHOST_KEY = "anyhost";
+    public static final String LOCALHOST_KEY = "localhost";
+    public static final String BACKUP_KEY = "backup";
+    public static final String INTERFACE_KEY = "interface";
 
     private final String protocol;
 
@@ -29,8 +66,10 @@ public final class URL implements Serializable {
 
     private final String password;
 
+    // by default, host to registry
     private final String host;
 
+    // by default, port to registry
     private final int port;
 
     private final String path;
@@ -153,6 +192,13 @@ public final class URL implements Serializable {
             }
             url = url.substring(0, i);
         }
+
+        // ignore the url content following '#'
+        int poundIndex = url.indexOf('#');
+        if (poundIndex != -1) {
+            url = url.substring(0, poundIndex);
+        }
+
         i = url.indexOf("://");
         if (i >= 0) {
             if (i == 0) {
@@ -177,7 +223,7 @@ public final class URL implements Serializable {
             path = url.substring(i + 1);
             url = url.substring(0, i);
         }
-        i = url.indexOf("@");
+        i = url.lastIndexOf("@");
         if (i >= 0) {
             username = url.substring(0, i);
             int j = username.indexOf(":");
@@ -311,7 +357,7 @@ public final class URL implements Serializable {
 
     public String getBackupAddress(int defaultPort) {
         StringBuilder address = new StringBuilder(appendDefaultPort(getAddress(), defaultPort));
-        String[] backups = getParameter(Constants.BACKUP_KEY, new String[0]);
+        String[] backups = getParameter(BACKUP_KEY, new String[0]);
         if (backups != null && backups.length > 0) {
             for (String backup : backups) {
                 address.append(",");
@@ -324,7 +370,7 @@ public final class URL implements Serializable {
     public List<URL> getBackupUrls() {
         List<URL> urls = new ArrayList<URL>();
         urls.add(this);
-        String[] backups = getParameter(Constants.BACKUP_KEY, new String[0]);
+        String[] backups = getParameter(BACKUP_KEY, new String[0]);
         if (backups != null && backups.length > 0) {
             for (String backup : backups) {
                 urls.add(this.setAddress(backup));
@@ -376,7 +422,7 @@ public final class URL implements Serializable {
     public String getParameter(String key) {
         String value = parameters.get(key);
         if (value == null || value.length() == 0) {
-            value = parameters.get(Constants.DEFAULT_KEY_PREFIX + key);
+            value = parameters.get(DEFAULT_KEY_PREFIX + key);
         }
         return value;
     }
@@ -394,7 +440,7 @@ public final class URL implements Serializable {
         if (value == null || value.length() == 0) {
             return defaultValue;
         }
-        return Constants.COMMA_SPLIT_PATTERN.split(value);
+        return COMMA_SPLIT_PATTERN.split(value);
     }
 
     private Map<String, Number> getNumbers() {
@@ -816,11 +862,11 @@ public final class URL implements Serializable {
     }
 
     public boolean isLocalHost() {
-        return NetUtils.isLocalHost(host) || getParameter(Constants.LOCALHOST_KEY, false);
+        return NetUtils.isLocalHost(host) || getParameter(LOCALHOST_KEY, false);
     }
 
     public boolean isAnyHost() {
-        return Constants.ANYHOST_VALUE.equals(host) || getParameter(Constants.ANYHOST_KEY, false);
+        return ANYHOST_VALUE.equals(host) || getParameter(ANYHOST_KEY, false);
     }
 
     public URL addParameterAndEncoded(String key, String value) {
@@ -932,9 +978,7 @@ public final class URL implements Serializable {
             }
         }
         // return immediately if there's no change
-        if (hasAndEqual) {
-            return this;
-        }
+        if (hasAndEqual) return this;
 
         Map<String, String> map = new HashMap<String, String>(getParameters());
         map.putAll(parameters);
@@ -980,7 +1024,7 @@ public final class URL implements Serializable {
     }
 
     public URL removeParameters(Collection<String> keys) {
-        if (keys == null || keys.size() == 0) {
+        if (keys == null || keys.isEmpty()) {
             return this;
         }
         return removeParameters(keys.toArray(new String[0]));
@@ -1184,12 +1228,12 @@ public final class URL implements Serializable {
             return null;
         }
         StringBuilder buf = new StringBuilder();
-        String group = getParameter(Constants.GROUP_KEY);
+        String group = getParameter(GROUP_KEY);
         if (group != null && group.length() > 0) {
             buf.append(group).append("/");
         }
         buf.append(inf);
-        String version = getParameter(Constants.VERSION_KEY);
+        String version = getParameter(VERSION_KEY);
         if (version != null && version.length() > 0) {
             buf.append(":").append(version);
         }
@@ -1210,11 +1254,11 @@ public final class URL implements Serializable {
     }
 
     public String getServiceInterface() {
-        return getParameter(Constants.INTERFACE_KEY, path);
+        return getParameter(INTERFACE_KEY, path);
     }
 
     public URL setServiceInterface(String service) {
-        return addParameter(Constants.INTERFACE_KEY, service);
+        return addParameter(INTERFACE_KEY, service);
     }
 
     /**

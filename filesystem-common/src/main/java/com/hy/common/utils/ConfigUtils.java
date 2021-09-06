@@ -5,6 +5,7 @@ import com.hy.common.extension.ExtensionLoader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.lang.management.ManagementFactory;
@@ -14,10 +15,6 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-/**
- * @author wyl
- * @since 2021-09-02 17:50:28
- */
 public class ConfigUtils {
 
     private static final Logger logger = LoggerFactory.getLogger(ConfigUtils.class);
@@ -25,6 +22,9 @@ public class ConfigUtils {
             "\\$\\s*\\{?\\s*([\\._0-9a-zA-Z]+)\\s*\\}?");
     private static volatile Properties PROPERTIES;
     private static int PID = -1;
+    public static final Pattern COMMA_SPLIT_PATTERN = Pattern
+            .compile("\\s*[,]+\\s*");
+    public static final String REMOVE_VALUE_PREFIX = "-";
 
     private ConfigUtils() {
     }
@@ -72,7 +72,7 @@ public class ConfigUtils {
         List<String> names = new ArrayList<String>();
 
         // add initial values
-        String[] configs = (cfg == null || cfg.trim().length() == 0) ? new String[0] : Constants.COMMA_SPLIT_PATTERN.split(cfg);
+        String[] configs = (cfg == null || cfg.trim().length() == 0) ? new String[0] : COMMA_SPLIT_PATTERN.split(cfg);
         for (String config : configs) {
             if (config != null && config.trim().length() > 0) {
                 names.add(config);
@@ -143,9 +143,7 @@ public class ConfigUtils {
     }
 
     public static void setProperties(Properties properties) {
-        if (properties != null) {
-            PROPERTIES = properties;
-        }
+        PROPERTIES = properties;
     }
 
     public static void addProperties(Properties properties) {
@@ -193,7 +191,7 @@ public class ConfigUtils {
     /**
      * Load properties file to {@link Properties} from class path.
      *
-     * @param fileName       properties file name. for example: <code>hy.properties</code>, <code>METE-INF/conf/foo.properties</code>
+     * @param fileName       properties file name. for example: <code>dubbo.properties</code>, <code>METE-INF/conf/foo.properties</code>
      * @param allowMultiFile if <code>false</code>, throw {@link IllegalStateException} when found multi file on the class path.
      * @param optional       is optional. if <code>false</code>, log warn when properties config file not found!s
      * @return loaded {@link Properties} content. <ul>
@@ -204,7 +202,7 @@ public class ConfigUtils {
      */
     public static Properties loadProperties(String fileName, boolean allowMultiFile, boolean optional) {
         Properties properties = new Properties();
-        if (fileName.startsWith("/")) {
+        if (checkFileNameExist(fileName)) {
             try {
                 FileInputStream input = new FileInputStream(fileName);
                 try {
@@ -213,15 +211,15 @@ public class ConfigUtils {
                     input.close();
                 }
             } catch (Throwable e) {
-                logger.warn("Failed to load " + fileName + " file from " + fileName + "(ingore this file): " + e.getMessage(), e);
+                logger.warn("Failed to load " + fileName + " file from " + fileName + "(ignore this file): " + e.getMessage(), e);
             }
             return properties;
         }
 
-        List<URL> list = new ArrayList<URL>();
+        List<java.net.URL> list = new ArrayList<java.net.URL>();
         try {
             Enumeration<URL> urls = ClassHelper.getClassLoader().getResources(fileName);
-            list = new ArrayList<URL>();
+            list = new ArrayList<java.net.URL>();
             while (urls.hasMoreElements()) {
                 list.add(urls.nextElement());
             }
@@ -229,7 +227,7 @@ public class ConfigUtils {
             logger.warn("Fail to load " + fileName + " file: " + t.getMessage(), t);
         }
 
-        if (list.size() == 0) {
+        if (list.isEmpty()) {
             if (!optional) {
                 logger.warn("No " + fileName + " found on the class path.");
             }
@@ -248,14 +246,14 @@ public class ConfigUtils {
             try {
                 properties.load(ClassHelper.getClassLoader().getResourceAsStream(fileName));
             } catch (Throwable e) {
-                logger.warn("Failed to load " + fileName + " file from " + fileName + "(ingore this file): " + e.getMessage(), e);
+                logger.warn("Failed to load " + fileName + " file from " + fileName + "(ignore this file): " + e.getMessage(), e);
             }
             return properties;
         }
 
         logger.info("load " + fileName + " properties file from " + list);
 
-        for (URL url : list) {
+        for (java.net.URL url : list) {
             try {
                 Properties p = new Properties();
                 InputStream input = url.openStream();
@@ -271,11 +269,22 @@ public class ConfigUtils {
                     }
                 }
             } catch (Throwable e) {
-                logger.warn("Fail to load " + fileName + " file from " + url + "(ingore this file): " + e.getMessage(), e);
+                logger.warn("Fail to load " + fileName + " file from " + url + "(ignore this file): " + e.getMessage(), e);
             }
         }
 
         return properties;
+    }
+
+    /**
+     * check if the fileName can be found in filesystem
+     *
+     * @param fileName
+     * @return
+     */
+    private static boolean checkFileNameExist(String fileName) {
+        File file = new File(fileName);
+        return file != null && file.exists() ? true : false;
     }
 
     public static int getPid() {
@@ -289,6 +298,30 @@ public class ConfigUtils {
             }
         }
         return PID;
+    }
+
+    @SuppressWarnings("deprecation")
+    public static int getServerShutdownTimeout() {
+        int timeout = Constants.DEFAULT_SERVER_SHUTDOWN_TIMEOUT;
+        String value = ConfigUtils.getProperty(Constants.SHUTDOWN_WAIT_KEY);
+        if (value != null && value.length() > 0) {
+            try {
+                timeout = Integer.parseInt(value);
+            } catch (Exception e) {
+                // ignore
+            }
+        } else {
+            value = ConfigUtils.getProperty(Constants.SHUTDOWN_WAIT_SECONDS_KEY);
+            if (value != null && value.length() > 0) {
+                try {
+                    timeout = Integer.parseInt(value) * 1000;
+                } catch (Exception e) {
+                    // ignore
+                }
+            }
+        }
+
+        return timeout;
     }
 
 }

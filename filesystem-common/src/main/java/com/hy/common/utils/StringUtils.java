@@ -1,22 +1,24 @@
 package com.hy.common.utils;
 
 import cn.hutool.json.JSONUtil;
-import com.hy.common.Constants;
 import com.hy.common.io.UnsafeStringWriter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.PrintWriter;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
  * StringUtils
- *
- * @author wyl
- * @since 2021-09-02 17:13:34
  */
+
 public final class StringUtils {
 
     public static final String[] EMPTY_STRING_ARRAY = new String[0];
@@ -24,13 +26,21 @@ public final class StringUtils {
     private static final Pattern KVP_PATTERN = Pattern.compile("([_.a-zA-Z0-9][-_.a-zA-Z0-9]*)[=](.*)"); //key value pair pattern.
 
     private static final Pattern INT_PATTERN = Pattern.compile("^\\d+$");
+    public static final Pattern COMMA_SPLIT_PATTERN = Pattern.compile("\\s*[,]+\\s*");
+    public static final String INTERFACE_KEY = "interface";
+    public static final String GROUP_KEY = "group";
+    public static final String VERSION_KEY = "version";
+    public static final String COMMA_SEPARATOR = ",";
+    public static final String DOT_REGEX = "\\.";
+    public static final String UNDERLINE_SEPARATOR = "_";
 
     private StringUtils() {
     }
 
     public static boolean isBlank(String str) {
-        if (str == null || str.length() == 0)
+        if (str == null || str.length() == 0) {
             return true;
+        }
         return false;
     }
 
@@ -110,7 +120,7 @@ public final class StringUtils {
         if (values == null || values.length() == 0) {
             return false;
         }
-        return isContains(Constants.COMMA_SPLIT_PATTERN.split(values), value);
+        return isContains(COMMA_SPLIT_PATTERN.split(values), value);
     }
 
     /**
@@ -188,9 +198,7 @@ public final class StringUtils {
      * @return String.
      */
     public static String translat(String src, String from, String to) {
-        if (isEmpty(src)) {
-            return src;
-        }
+        if (isEmpty(src)) return src;
         StringBuilder sb = null;
         int ix;
         char c;
@@ -247,9 +255,7 @@ public final class StringUtils {
      * @return String.
      */
     public static String join(String[] array) {
-        if (array.length == 0) {
-            return "";
-        }
+        if (array.length == 0) return "";
         StringBuilder sb = new StringBuilder();
         for (String s : array) {
             sb.append(s);
@@ -265,9 +271,7 @@ public final class StringUtils {
      * @return String.
      */
     public static String join(String[] array, char split) {
-        if (array.length == 0) {
-            return "";
-        }
+        if (array.length == 0) return "";
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < array.length; i++) {
             if (i > 0) {
@@ -344,20 +348,19 @@ public final class StringUtils {
      * @return Parameters instance.
      */
     public static Map<String, String> parseQueryString(String qs) {
-        if (qs == null || qs.length() == 0) {
+        if (qs == null || qs.length() == 0)
             return new HashMap<String, String>();
-        }
         return parseKeyValuePair(qs, "\\&");
     }
 
     public static String getServiceKey(Map<String, String> ps) {
         StringBuilder buf = new StringBuilder();
-        String group = ps.get(Constants.GROUP_KEY);
+        String group = ps.get(GROUP_KEY);
         if (group != null && group.length() > 0) {
             buf.append(group).append("/");
         }
-        buf.append(ps.get(Constants.INTERFACE_KEY));
-        String version = ps.get(Constants.VERSION_KEY);
+        buf.append(ps.get(INTERFACE_KEY));
+        String version = ps.get(VERSION_KEY);
         if (version != null && version.length() > 0) {
             buf.append(":").append(version);
         }
@@ -413,7 +416,7 @@ public final class StringUtils {
         StringBuilder buf = new StringBuilder();
         for (Object arg : args) {
             if (buf.length() > 0) {
-                buf.append(Constants.COMMA_SEPARATOR);
+                buf.append(COMMA_SEPARATOR);
             }
             if (arg == null || ReflectUtils.isPrimitives(arg.getClass())) {
                 buf.append(arg);
@@ -428,4 +431,12 @@ public final class StringUtils {
         }
         return buf.toString();
     }
+
+    /*public static String toOSStyleKey(String key) {
+        key = key.toUpperCase().replaceAll(DOT_REGEX, UNDERLINE_SEPARATOR);
+        if (!key.startsWith("DUBBO_")) {
+            key = "DUBBO_" + key;
+        }
+        return key;
+    }*/
 }

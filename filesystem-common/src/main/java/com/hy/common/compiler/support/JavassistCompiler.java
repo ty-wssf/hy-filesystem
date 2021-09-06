@@ -12,9 +12,6 @@ import java.util.regex.Pattern;
 
 /**
  * JavassistCompiler. (SPI, Singleton, ThreadSafe)
- *
- * @author wyl
- * @since 2021-09-02 17:00:02
  */
 public class JavassistCompiler extends AbstractCompiler {
 
@@ -104,4 +101,3 @@ public class JavassistCompiler extends AbstractCompiler {
     }
 
 }
-

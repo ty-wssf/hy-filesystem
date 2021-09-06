@@ -6,9 +6,6 @@ import com.hy.common.extension.SPI;
 
 /**
  * SpiExtensionFactory
- *
- * @author wyl
- * @since 2021-09-02 18:04:06
  */
 public class SpiExtensionFactory implements ExtensionFactory {
 
@@ -16,7 +13,7 @@ public class SpiExtensionFactory implements ExtensionFactory {
     public <T> T getExtension(Class<T> type, String name) {
         if (type.isInterface() && type.isAnnotationPresent(SPI.class)) {
             ExtensionLoader<T> loader = ExtensionLoader.getExtensionLoader(type);
-            if (loader.getSupportedExtensions().size() > 0) {
+            if (!loader.getSupportedExtensions().isEmpty()) {
                 return loader.getAdaptiveExtension();
             }
         }

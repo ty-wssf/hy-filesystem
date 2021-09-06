@@ -2,9 +2,6 @@ package com.hy.common.utils;
 
 /**
  * Helper Class for hold a value.
- *
- * @author wyl
- * @since 2021-09-02 17:12:22
  */
 public class Holder<T> {
 

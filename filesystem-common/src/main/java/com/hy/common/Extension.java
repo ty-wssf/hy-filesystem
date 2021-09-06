@@ -1,4 +1,4 @@
-package com.hy.common.extension;
+package com.hy.common;
 
 import java.lang.annotation.*;
 
@@ -29,15 +29,19 @@ import java.lang.annotation.*;
  * Fails to load Extension("mina"). When user configure to use mina, dubbo will complain the extension cannot be loaded,
  * instead of reporting which extract extension implementation fails and the extract reason.
  * </p>
+ *
+ * @deprecated because it's too general, switch to use {@link com.alibaba.dubbo.common.extension.SPI}
  */
+@Deprecated
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.TYPE})
-public @interface SPI {
+public @interface Extension {
 
     /**
-     * default extension name
+     * @deprecated
      */
+    @Deprecated
     String value() default "";
 
 }

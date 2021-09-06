@@ -4,7 +4,6 @@ import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.digest.MD5;
 import cn.hutool.extra.spring.SpringUtil;
-import com.hy.common.Constants;
 import com.hy.filesystem.storage.config.ResourcesConfig;
 import com.hy.filesystem.storage.service.IFileService;
 import lombok.extern.slf4j.Slf4j;
@@ -34,7 +33,7 @@ public class LocalFileServiceImpl implements IFileService {
             FileUtil.writeBytes(data, file);
             String url = resourcesConfig.getDomain()
                     .concat(resourcesConfig.getPrefix())
-                    .concat(Constants.C_SLASH)
+                    .concat("/")
                     .concat(bucket)
                     .concat(fileName);
             log.info("文件访问地址：{}", url);

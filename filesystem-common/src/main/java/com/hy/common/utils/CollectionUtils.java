@@ -1,11 +1,13 @@
 package com.hy.common.utils;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-/**
- * @author wyl
- * @since 2021-09-02 17:40:22
- */
 public class CollectionUtils {
 
     private static final Comparator<String> SIMPLE_NAME_COMPARATOR = new Comparator<String>() {
@@ -37,7 +39,7 @@ public class CollectionUtils {
 
     @SuppressWarnings({"unchecked", "rawtypes"})
     public static <T> List<T> sort(List<T> list) {
-        if (list != null && list.size() > 0) {
+        if (list != null && !list.isEmpty()) {
             Collections.sort((List) list);
         }
         return list;
@@ -77,7 +79,7 @@ public class CollectionUtils {
             return null;
         }
         Map<String, String> map = new HashMap<String, String>();
-        if (list == null || list.size() == 0) {
+        if (list.isEmpty()) {
             return map;
         }
         for (String item : list) {
@@ -96,7 +98,7 @@ public class CollectionUtils {
             return null;
         }
         List<String> list = new ArrayList<String>();
-        if (map == null || map.size() == 0) {
+        if (map.size() == 0) {
             return list;
         }
         for (Map.Entry<String, String> entry : map.entrySet()) {
@@ -172,7 +174,6 @@ public class CollectionUtils {
         if (pairs == null || pairs.length == 0) {
             return ret;
         }
-
         if (pairs.length % 2 != 0) {
             throw new IllegalArgumentException("Map pairs can not be odd number.");
         }
@@ -184,11 +185,11 @@ public class CollectionUtils {
     }
 
     public static boolean isEmpty(Collection<?> collection) {
-        return collection == null || collection.size() == 0;
+        return collection == null || collection.isEmpty();
     }
 
     public static boolean isNotEmpty(Collection<?> collection) {
-        return collection != null && collection.size() > 0;
+        return collection != null && !collection.isEmpty();
     }
 
 }
