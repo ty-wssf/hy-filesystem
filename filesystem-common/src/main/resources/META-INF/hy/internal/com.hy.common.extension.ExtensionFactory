@@ -1,2 +1,2 @@
-spring=com.hy.common.extension.factory.SpringExtensionFactory
 adaptive=com.hy.common.extension.factory.AdaptiveExtensionFactory
+spi=com.hy.common.extension.factory.SpiExtensionFactory

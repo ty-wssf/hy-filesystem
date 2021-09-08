@@ -1,0 +1,2 @@
+jdk=com.hy.rpc.proxy.jdk.JdkProxyFactory
+javassist=com.hy.rpc.proxy.javassist.JavassistProxyFactory

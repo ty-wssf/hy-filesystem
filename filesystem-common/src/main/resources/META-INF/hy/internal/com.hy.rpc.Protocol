@@ -1,0 +1,3 @@
+filter=com.hy.rpc.protocol.ProtocolFilterWrapper
+listener=com.hy.rpc.protocol.ProtocolListenerWrapper
+rmi=com.hy.rpc.protocol.rmi.RmiProtocol

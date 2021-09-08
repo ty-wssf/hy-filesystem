@@ -7,7 +7,7 @@ import com.hy.common.extension.SPI;
 /**
  * Protocol. (API/SPI, Singleton, ThreadSafe)
  */
-@SPI("dubbo")
+@SPI("rmi")
 public interface Protocol {
 
     /**
