@@ -7,6 +7,6 @@ package com.hy.test;
 public class HelloImpl implements Hello {
     @Override
     public String say() {
-        return null;
+        return "fewfew";
     }
 }
