@@ -1,5 +1,7 @@
 package com.hy.rpc;
 
+import java.util.regex.Pattern;
+
 /**
  * @author wyl
  * @since 2021-09-07 09:55:03
@@ -39,5 +41,8 @@ public class Constants {
     public static final String REFERENCE_FILTER_KEY = "reference.filter";
     public static final String EXPORTER_LISTENER_KEY = "exporter.listener";
     public static final String INVOKER_LISTENER_KEY = "invoker.listener";
+    public static final String $ECHO = "$echo";
+    public static final Pattern SEMICOLON_SPLIT_PATTERN = Pattern
+            .compile("\\s*[;]+\\s*");
 
 }

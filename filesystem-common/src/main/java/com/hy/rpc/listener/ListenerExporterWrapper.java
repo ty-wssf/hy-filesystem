@@ -10,6 +10,7 @@ import java.util.List;
 
 /**
  * ListenerExporter
+ * 使用装饰器模式实现Export的创建和销毁的监听
  */
 public class ListenerExporterWrapper<T> implements Exporter<T> {
 

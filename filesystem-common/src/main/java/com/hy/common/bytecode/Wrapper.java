@@ -79,18 +79,23 @@ public abstract class Wrapper {
 
     /**
      * get wrapper.
+     * 生成一个继承于Wrapper的类
      *
      * @param c Class instance.
      * @return Wrapper instance(not null).
      */
     public static Wrapper getWrapper(Class<?> c) {
-        while (ClassGenerator.isDynamicClass(c)) // can not wrapper on dynamic class.
+        // 是否是一个动态生成的类
+        while (ClassGenerator.isDynamicClass(c)) {// can not wrapper on dynamic class.
             c = c.getSuperclass();
+        }
 
         if (c == Object.class) {
             return OBJECT_WRAPPER;
         }
 
+        // 生成Wrapper类,这边逻辑比较难懂,下面先通过arthas生成具体的Wrapper类观察一下
+        // 通过javassist构建 Class
         Wrapper ret = WRAPPER_MAP.get(c);
         if (ret == null) {
             ret = makeWrapper(c);

@@ -63,7 +63,7 @@ public abstract class AbstractProxyProtocol extends AbstractProtocol {
             return exporter;
         }
         // 新建一个线程
-        final Runnable runnable = doExport(proxyFactory.getProxy(invoker, true), invoker.getInterface(), invoker.getUrl());
+        final Runnable runnable = doExport(proxyFactory.getProxy(invoker), invoker.getInterface(), invoker.getUrl());
         exporter = new AbstractExporter<T>(invoker) {
             /**
              * 取消暴露
@@ -89,6 +89,7 @@ public abstract class AbstractProxyProtocol extends AbstractProtocol {
 
     /**
      * 该方法是服务引用，先从代理工厂中获得Invoker对象target，然后创建了真实的invoker在重写方法中调用代理的方法，最后加入到集合。
+     *
      * @param type Service class
      * @param url  URL address for the remote service
      * @param <T>

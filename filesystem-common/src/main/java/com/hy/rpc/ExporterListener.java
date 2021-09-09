@@ -4,12 +4,14 @@ import com.hy.common.extension.SPI;
 
 /**
  * ExporterListener. (SPI, Singleton, ThreadSafe)
+ * 该接口是服务暴露的监听器接口，定义了两个方法是暴露和取消暴露
  */
 @SPI
 public interface ExporterListener {
 
     /**
      * The exporter exported.
+     * 暴露服务
      *
      * @param exporter
      * @throws RpcException
@@ -19,6 +21,7 @@ public interface ExporterListener {
 
     /**
      * The exporter unexported.
+     * 取消暴露
      *
      * @param exporter
      * @throws RpcException

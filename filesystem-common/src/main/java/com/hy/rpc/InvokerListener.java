@@ -4,6 +4,7 @@ import com.hy.common.extension.SPI;
 
 /**
  * InvokerListener. (SPI, Singleton, ThreadSafe)
+ * Invoker监听器
  */
 @SPI
 public interface InvokerListener {

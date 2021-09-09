@@ -11,13 +11,14 @@ public interface Exporter<T> {
 
     /**
      * get invoker.
+     * 获得对应的实体域invoker
      *
      * @return invoker
      */
     Invoker<T> getInvoker();
 
     /**
-     * unexport.
+     * unexport. 取消暴露
      * <p>
      * <code>
      * getInvoker().destroy();

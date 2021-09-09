@@ -9,4 +9,10 @@ public class HelloImpl implements Hello {
     public String say() {
         return "fewfew";
     }
+
+    @Override
+    public Object $echo(Object message) {
+        return null;
+    }
+
 }

@@ -20,15 +20,6 @@ public interface ProxyFactory {
     <T> T getProxy(Invoker<T> invoker) throws RpcException;
 
     /**
-     * create proxy.
-     *
-     * @param invoker
-     * @return proxy
-     */
-    @Adaptive({Constants.PROXY_KEY})
-    <T> T getProxy(Invoker<T> invoker, boolean generic) throws RpcException;
-
-    /**
      * create invoker.
      *
      * @param <T>

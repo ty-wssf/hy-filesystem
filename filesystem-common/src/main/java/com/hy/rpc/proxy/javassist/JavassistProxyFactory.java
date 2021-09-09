@@ -4,19 +4,19 @@ import com.hy.common.URL;
 import com.hy.common.bytecode.Proxy;
 import com.hy.common.bytecode.Wrapper;
 import com.hy.rpc.Invoker;
-import com.hy.rpc.proxy.AbstractProxyFactory;
+import com.hy.rpc.ProxyFactory;
 import com.hy.rpc.proxy.AbstractProxyInvoker;
 import com.hy.rpc.proxy.InvokerInvocationHandler;
 
 /**
  * JavaassistRpcProxyFactory
  */
-public class JavassistProxyFactory extends AbstractProxyFactory {
+public class JavassistProxyFactory implements ProxyFactory {
 
     @Override
     @SuppressWarnings("unchecked")
-    public <T> T getProxy(Invoker<T> invoker, Class<?>[] interfaces) {
-        return (T) Proxy.getProxy(interfaces).newInstance(new InvokerInvocationHandler(invoker));
+    public <T> T getProxy(Invoker<T> invoker) {
+        return (T) Proxy.getProxy(invoker.getInterface()).newInstance(new InvokerInvocationHandler(invoker));
     }
 
     @Override

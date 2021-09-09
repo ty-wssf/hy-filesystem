@@ -10,7 +10,7 @@ import java.util.Map;
 
 public class RmiRemoteInvocation extends RemoteInvocation {
     private static final long serialVersionUID = 1L;
-    private static final String dubboAttachmentsAttrName = "dubbo.attachments";
+    private static final String dubboAttachmentsAttrName = "hy.attachments";
 
     /**
      * executed on consumer side

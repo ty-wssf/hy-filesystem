@@ -106,8 +106,9 @@ public final class ClassGenerator {
     }
 
     public ClassGenerator addField(String code) {
-        if (mFields == null)
+        if (mFields == null) {
             mFields = new ArrayList<String>();
+        }
         mFields.add(code);
         return this;
     }

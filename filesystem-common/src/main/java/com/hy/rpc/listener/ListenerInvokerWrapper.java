@@ -9,6 +9,7 @@ import java.util.List;
 
 /**
  * ListenerInvoker
+ * 使用装饰器模式实现Export的创建和销毁的监听
  */
 public class ListenerInvokerWrapper<T> implements Invoker<T> {
 
